@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Untitled</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Kombat</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .game-area {
+      margin: 20px 0;
+    }
+
+    #scrambled-word {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    #user-input {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #28a745;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    #timer {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #f39c12;
+    }
+
+    #controls {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Word Kombat</h1>
+    <p id="level">Level: 1</p>
+    <p id="score">Score: 0</p>
+    <p id="timer">Time: 30</p>
+    <div class="game-area">
+      <p id="scrambled-word">_ _ _ _</p>
+      <input type="text" id="user-input" placeholder="Enter your answer" />
+      <button id="submit-btn" disabled>Submit</button>
+      <button id="play-sound-btn" style="margin-left: 10px;" disabled>Play Sound</button>
+    </div>
+    <p id="definition"></p>
+    <p id="message"></p>
+    <div id="controls">
+      <button id="start-btn">Start Game</button>
+      <button id="end-btn" disabled>End Game</button>
+    </div>
+  </div>
+
+  <script>
+    const apiBaseUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+    let currentWord = "";
+    let scrambledWord = "";
+    let score = 0;
+    let level = 1;
+    let timer = 30;
+    let timerInterval;
+    let audioUrl = "";
+
+    // DOM Elements
+    const scrambledWordElement = document.getElementById("scrambled-word");
+    const userInput = document.getElementById("user-input");
+    const submitBtn = document.getElementById("submit-btn");
+    const playSoundBtn = document.getElementById("play-sound-btn");
+    const messageElement = document.getElementById("message");
+    const definitionElement = document.getElementById("definition");
+    const scoreElement = document.getElementById("score");
+    const levelElement = document.getElementById("level");
+    const timerElement = document.getElementById("timer");
+    const startBtn = document.getElementById("start-btn");
+    const endBtn = document.getElementById("end-btn");
+
+    // Utility functions
+    function saveProgress() {
+      const progress = { score, level };
+      localStorage.setItem("wordKombatProgress", JSON.stringify(progress));
+    }
+
+    function loadProgress() {
+      const progress = JSON.parse(localStorage.getItem("wordKombatProgress"));
+      if (progress) {
+        score = progress.score;
+        level = progress.level;
+        scoreElement.textContent = `Score: ${score}`;
+        levelElement.textContent = `Level: ${level}`;
+      }
+    }
+
+    // Shuffle the letters of a word
+    function shuffleWord(word) {
+      const shuffled = word.split("").sort(() => Math.random() - 0.5).join("");
+      return shuffled === word ? shuffleWord(word) : shuffled;
+    }
+
+    // Fetch a random word's definition and pronunciation
+    async function fetchWordData(word) {
+      try {
+        const response = await fetch(apiBaseUrl + word);
+        if (!response.ok) throw new Error("Word not found");
+        const data = await response.json();
+        const definition = data[0]?.meanings[0]?.definitions[0]?.definition || "No definition available.";
+        audioUrl = data[0]?.phonetics[0]?.audio || "";
+        definitionElement.textContent = `Definition: ${definition}`;
+        playSoundBtn.style.display = audioUrl ? "inline-block" : "none";
+      } catch (error) {
+        definitionElement.textContent = "Error fetching word details.";
+        playSoundBtn.style.display = "none";
+      }
+    }
+
+    // Start a new round
+    function newRound() {
+      clearInterval(timerInterval);
+      currentWord = getRandomWord();
+      scrambledWord = shuffleWord(currentWord);
+      scrambledWordElement.textContent = scrambledWord;
+      userInput.value = "";
+      messageElement.textContent = "";
+      definitionElement.textContent = "";
+      timer = 30;
+      timerElement.textContent = `Time: ${timer}`;
+      fetchWordData(currentWord);
+      startTimer();
+    }
+
+    // Timer logic
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timer -= 1;
+        timerElement.textContent = `Time: ${timer}`;
+        if (timer <= 0) {
+          clearInterval(timerInterval);
+          messageElement.textContent = `Time's up! The correct word was: ${currentWord}`;
+          messageElement.style.color = "red";
+          playSound();
+          setTimeout(newRound, 3000); // Delay before new round
+        }
+      }, 1000);
+    }
+
+    // Get a random word from a predefined list
+    function getRandomWord() {
+      const words = [
+        "Apple", "Banana", "Cherry", "Dragonfruit", "Elderberry", "Fig", "Grape", "Dog", "Cat", "Elephant", "Tiger", "Lion", 
+
+"Giraffe", "Zebra", "Kangaroo", "Panda", "Leopard", 
+
+"Cheetah", "Hippopotamus", "Rhinoceros", "Crocodile", "Alligator", 
+
+"Eagle", "Owl", "Penguin", "Dolphin", "Shark", 
+
+"Whale", "Octopus",  "Squid", "Seal", "Walrus", 
+
+"Bear", "Wolf", "Fox", "Deer", "Moose", 
+
+"Squirrel", "Rabbit", "Bat", "Raccoon", "Hedgehog", 
+
+"Chameleon", "Lizard", "Snake", "Frog", "Toad", 
+
+"Butterfly", "Bee", 
+    "Computer", "Algorithm", "Database", "Software", "Hardware", 
+    "Encryption", "Network", "Cybersecurity", "Internet", "Programming",
+    "Artificial", "Intelligence", "Blockchain", "Robotics", "Automation", 
+    "Debugging", "Cloud", "Server", "Compiler", "Machine",  
+    "Physics", "Chemistry", "Biology", "Astronomy", "Geology",
+    "Meteorology", "Ecology", "Genetics", "Zoology", "Botany",
+    "Evolution", "Microorganism", "Quantum", "Molecule", "Atom",
+    "Photosynthesis", "Telescope", "Microscope", "Experiment", "Hypothesis",  
+    "Anatomy", "Surgery", "Diagnosis", "Pathology", "Vaccine",
+    "Pandemic", "Epidemic", "Infection", "Antibiotic", "Cancer",
+    "Cardiology", "Dermatology", "Radiology", "Neurology", "Hematology",
+    "Pediatrics", "Psychiatry", "Immunology", "Endocrinology", "Orthopedics",   
+    "Geometry", "Algebra", "Calculus", "Probability", "Statistics",
+    "Fraction", "Equation", "Theorem", "Integral", "Derivative",
+    "Matrix", "Arithmetic", "Polynomial", "Trigonometry", "Parabola",
+    "Hypotenuse", "Factorial", "Permutation", "Combination", "Ratio",  
+    "Entrepreneur", "Startup", "Investment", "Capital", "Marketing",
+    "Branding", "Innovation", "Leadership", "Management", "Strategy",
+    "Negotiation", "Revenue", "Expense", "Profit", "Equity",
+    "Stakeholder", "Asset", "Liability", "Partnership", "Merger",  
+    "Painting", "Sculpture", "Music", "Dance", "Theater",
+    "Architecture", "Calligraphy", "Photography", "Literature", "Poetry",
+    "Abstract", "Realism", "Portrait", "Sketch", "Graphic",
+    "Design", "Animation", "Choreography", "Ceramics", "Performance",  
+    "Soccer", "Basketball", "Tennis", "Cricket", "Baseball",
+    "Swimming", "Cycling", "Gymnastics", "Boxing", "Wrestling",
+    "Volleyball", "Badminton", "Hockey", "Marathon", "Archery",
+    "Golf", "Surfing", "Skating", "Skiing", "Rugby",  
+    "Continent", "Country", "Ocean", "River", "Mountain",
+    "Valley", "Glacier", "Desert", "Forest", "Island",
+    "Peninsula", "Plateau", "Climate", "Volcano", "Earthquake",
+    "Erosion", "Basin", "Harbor", "Latitude", "Longitude",  
+    "Civilization", "Dynasty", "Empire", "Revolution", "Independence",
+    "Treaty", "Colony", "Archaeology", "War", "Renaissance",
+    "Monarchy", "Democracy", "Constitution", "Feudalism", "Industrialization",
+    "Exploration", "Colonialism", "Nationalism", "Federation", 
+    "Happiness", "Friendship", "Kindness", "Gratitude", "Bravery",
+    "Loyalty", "Honesty", "Creativity", "Curiosity", "Confidence",
+    "Freedom", "Courage", "Patience", "Determination", "Success",
+    "Wisdom", "Integrity", "Adventure", "Perseverance", "Respect",  "Ant", "Spider", "Scorpion", 
+
+"Turtle", "Crab", "Lobster", "Jellyfish", "Starfish",  "Subject", "Object", "Predicate", "Clause", "Phrase", 
+
+"Auxiliary", "Transitive", "Intransitive", "Infinitive", "Participle", 
+
+"Comparative", "Superlative", "Descriptive", "Quantitative", "Possessive", 
+
+"Intensifier", "Conjunctive", "Manner", "Degree", "Frequency", 
+
+"Reflexive", "Demonstrative", "Relative", "Interrogative", "Possessive", 
+
+"Locative", "Temporal", "Directional", "Compound", "Simple", 
+
+"Coordinating", "Subordinating", "Correlative", "Linking", "Contrasting", "Object-Verb", "Compound-Subject", "Independent", "Dependent", 
+
+"Comma", "Apostrophe", "Colon", "Semicolon", "Hyphen", 
+
+"Tense", "Passive", "Active", "Agreement", "Modifier",  "Honeydew", "Kiwi", "Lemon"
+      ];
+      return words[Math.floor(Math.random() * words.length)];
+    }
+
+    // Play pronunciation sound
+    playSoundBtn.addEventListener("click", () => {
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        audio.play();
+      }
+    });
+
+    // Validate user input
+    submitBtn.addEventListener("click", () => {
+      const userAnswer = userInput.value.trim().toLowerCase();
+      const correctAnswer = currentWord.trim().toLowerCase();
+      if (userAnswer === correctAnswer) {
+        clearInterval(timerInterval);
+        messageElement.textContent = "Correct!";
+        messageElement.style.color = "green";
+        score += 10;
+        scoreElement.textContent = `Score: ${score}`;
+        saveProgress();
+        if (score % 30 === 0) {
+          level += 1;
+          levelElement.textContent = `Level: ${level}`;
+        }
+        newRound();
+      } else {
+        messageElement.textContent = "Incorrect! Try again.";
+        messageElement.style.color = "red";
+      }
+    });
+
+    // Start the game
+    startBtn.addEventListener("click", () => {
+      loadProgress();
+      startBtn.disabled = true;
+      endBtn.disabled = false;
+      submitBtn.disabled = false;
+      playSoundBtn.disabled = false;
+      newRound();
+    });
+
+    // End the game
+    endBtn.addEventListener("click", () => {
+      clearInterval(timerInterval);
+      startBtn.disabled = false;
+      endBtn.disabled = true;
+      submitBtn.disabled = true;
+      playSoundBtn.disabled = true;
+      messageElement.textContent = "Game Ended. Progress saved!";
+      saveProgress();
+    });
+    
+    function startTimer() {
+  timerInterval = setInterval(() => {
+    timer -= 1;
+    timerElement.textContent = `Time: ${timer}`;
+    if (timer <= 0) {
+      clearInterval(timerInterval); // Stop the timer
+      // Show the correct word
+      messageElement.textContent = `Time's up! The correct word was: ${currentWord}`;
+      messageElement.style.color = "red";
+
+      // Allow 3 seconds for the user to see the correct word before starting the next round
+      setTimeout(() => {
+        messageElement.textContent = ""; // Clear the correction message
+        newRound(); // Start the next round
+      }, 3000);
+    }
+  }, 1000);
+}
+
+    
+
+    // Load progress on page load
+    loadProgress();
+  </script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
