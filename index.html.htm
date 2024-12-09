@@ -151,7 +151,7 @@
 
     // Shuffle the letters of a word
     function shuffleWord(word) {
-      const shuffled = word.split("").sort(() => Math.random() - 0.15).join("");
+      const shuffled = word.split("").sort(() => Math.random() - 0.5).join("");
       return shuffled === word ? shuffleWord(word) : shuffled;
     }
 
