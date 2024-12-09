@@ -151,7 +151,7 @@
 
     // Shuffle the letters of a word
     function shuffleWord(word) {
-      const shuffled = word.split("").sort(() => Math.random() - 0.5).join("");
+      const shuffled = word.split("").sort(() => Math.random() - 0.15).join("");
       return shuffled === word ? shuffleWord(word) : shuffled;
     }
 
@@ -196,7 +196,7 @@
           messageElement.textContent = `Time's up! The correct word was: ${currentWord}`;
           messageElement.style.color = "red";
           playSound();
-          setTimeout(newRound, 3000); // Delay before new round
+          setTimeout(newRound, 10000); // Delay before new round
         }
       }, 1000);
     }
@@ -204,13 +204,117 @@
     // Get a random word from a predefined list
     function getRandomWord() {
       const words = [
-        "Apple", "Banana", "Cherry", "Dragonfruit", "Elderberry", "Fig", "Grape", "Dog", "Cat", "Elephant", "Tiger", "Lion", 
+        "apple", "banana", "cherry", "dragonfruit", "elderberry", "fig", "grape", "dog", "cat", "elephant", "Tiger", "Lion", 
 
 "Giraffe", "Zebra", "Kangaroo", "Panda", "Leopard", 
 
 "Cheetah", "Hippopotamus", "Rhinoceros", "Crocodile", "Alligator", 
 
-"Eagle", "Owl", "Penguin", "Dolphin", "Shark", 
+"Eagle",  "implicit", "implicate", "implode", "imply", "impolitic", "importunate", "imprecise", "impromptu", "improvise",
+    "impudent", "impugn", "impute", "inane", "inanimate", "inappropriate", "inaugurate", "incalculable", "incantation", "incapacitate",
+    "incarcerate", "incarnate", "incendiary", "incentive", "inception", "incessant", "incidental", "incipient", "incision", "incisive",
+    "incite", "inclement", "incline", "incognito", "incoherent", "incompatible", "incomprehensible", "incongruous", "inconsequential", "inconsistent",
+    "inconspicuous", "incontestable", "inconvenience", "incorporate", "incorrigible", "increase", "incumbent", "incursion", "incur", "indefinite",
+    "indelible", "indenture", "independence", "independent", "indicative", "indigenous", "indignant", "indirect", "indiscreet", "indispensable",
+    "indoctrinate", "indomitable", "indulge", "ineffable", "inefficient", "inelegant", "ineligible", "inept", "inequitable", "inertia",
+    "inescapable", "inexcusable", "inexhaustible", "inexorable", "inexpensive", "infallible", "infamous", "infanticide", "infatuated", "infect",
+    "infelicitous", "infer", "inference", "inferior", "infernal", "infest", "infidel", "infiltrate", "infirm", "inflame",
+    "inflate", "inflect", "inflexible", "inflict", "influence", "influential", "inform", "infraction", "infringe", "ingenuity",
+    "ingenuous", "ingrate", "ingratiate", "inhabit", "inhibit", "inhospitable", "inimical", "iniquity", "initiate", "injunction",
+    "inkling", "innate", "innocuous", "innuendo", "inordinate", "inquest", "inquire", "inquiry", "insatiable", "inscribe",
+    "inscrutable", "insinuate", "insipid", "insist", "insolent", "insomnia", "insouciant", "inspect", "inspiration", "install",
+    "instance", "instantaneous", "instigate", "instigator", "instill", "instinct", "institute", "instruct", "instrument", "insubordinate",
+    "insufficient", "insular", "insult", "insuperable", "insurgent", "insurrection", "intact", "integral", "integrate", "integrity",
+    "intellect", "intellectual", "intelligible", "intend", "intense", "intention", "intercede", "intercept", "intercession", "interdict",
+    "interfere", "interject", "interim", "interior", "interject", "interlocutor", "interlude", "intermediary", "intermittent", "intern",
+    "interpolate", "interpret", "interrogate", "interrupt", "intersperse", "intertwine", "interval", "intervene", "interview", "intestate",
+    "intimacy", "intimidate", "intricate", "intrigue", "intrinsic", "introspective", "introvert", "intrude", "intuition", "inundate",
+    "inure", "invalidate", "invasion", "invective", "inventive", "inventory", "inverse", "invert", "invest", "investigate",
+    "invigorate", "invincible", "invisible", "invitation", "invoice", "invoke", "involuntary", "irascible", "irate", "ironic",
+    "irresolute", "irrevocable", "irritable", "itinerant", "jabber", "jargon", "jaundice", "jeopardize", "jocular", "jovial",
+    "jubilant", "judicious", "juggernaut", "jurisprudence", "juxtapose", "kaleidoscope", "knell", "labyrinth", "laconic", "lacrimose",
+    "lament", "lamentable", "lampoon", "languid", "lapidary", "larceny", "latent", "laudable", "lavish", "lax",
+    "lecherous", "legacy", "legitimate", "lenient", "lethargic", "levity", "liability", "liaison", "libel", "libertine",
+    "licentious", "litigious", "loquacious", "lucid", "lucrative", "ludicrous", "lugubrious", "luminous", "lunatic", "lustrous",
+    "macabre", "machination", "maculated", "maelstrom", "magnanimous", "magnate", "magnificent", "majestic", "maladroit", "malapropism",
+    "malcontent", "malfeasance", "malign", "malignant", "malleable", "malpractice", "mammoth", "mandatory", "maneuver", "manifest",
+    "manipulate", "mannerism", "marauder", "marquee", "martial", "martyr", "marvelous", "masochistic", "maverick", "mawkish",
+    "meager", "meander", "meaningful", "meddlesome", "mediocre", "meditate", "medley", "megalomania", "melancholy", "mellifluous",
+    "melodramatic", "mendacious", "menial", "mercenary",  "mercurial", "meretricious", "meritorious", "mesmerize", "metamorphosis", "meticulous",
+    "metropolis", "miasma", "microscopic", "migratory", "milieu", "militant", "mimicry", "minatory", "miniature", "minutiae",
+    "misanthrope", "misapprehension", "miscalculate", "miscarriage", "miscellaneous", "misconception", "miscreant", "misdemeanor", "misgiving", "mishap",
+    "misinform", "misinterpret", "misjudge", "misnomer", "misrepresent", "missive", "mitigate", "mnemonic", "moderation", "modicum",
+    "mollify", "monolithic", "monotony", "moratorium",  "morose", "mortify", "motley", "mountebank", "multifaceted", "mundane",
+    "munificent", "murky", "mutable", "myriad", "narcissism", "narcissist", "narrative", "nascent", "nautical", "nauseous",
+    "nebulous", "necromancer", "nefarious", "negligent", "nemesis", "neophyte", "nepotism", "nettlesome", "neutralize", "niche",
+    "niggardly", "nocturnal", "nocturne", "nomad", "nomadic", "nonchalant", "noncommittal",  "non sequitur", "notorious", "nurture",
+    "obdurate", "obfuscate", "obituary", "objectionable", "objective", "obligatory", "oblique", "obliterate", "oblivious", "obnoxious",
+    "obsequious", "obsolete", "obstacle", "obstinate", "obstreperous", "obtrude", "obtuse", "obviate", "occluded", "occult",
+    "odious", "offhand", "officious", "ominous", "omnipotent", "omnipresent",  "omniscient", "onerous", "opaque", "opportunistic",
+    "opulent", "oracular", "oration", "orchard", "ordain", "ordinance", "ornament", "ornate", "orthodox", "oscillate",
+    "ostentatious", "ostracize", "outlandish", "outrageous", "outspoken", "outstrip", "oval", "overbearing", "overburden", "overcast",
+    "overconfident", "overestimate", "overjoyed", "overlook", "overpower", "overt", "overwhelm", "pacify", "paean", "palatable",
+    "palatial", "pallor", "palpable", "panacea",  "panache", "pandemic", "panegyric", "paradox", "paragon", "paramount",
+    "paraphrase", "parasite", "parch", "parsimonious", "partisan", "passive", "pastoral", "patriarch", "patronage", "paucity",
+    "peccadillo", "pecuniary", "pedantic", "pedestrian", "pejorative", "pellucid", "penchant", "penitent", "penurious", "perceive",
+    "perceptible", "perception", "peremptory", "perennial", "perfidious", "perfunctory",  "perilous", "perimeter", "peripheral", "periphery",
+    "perishable", "permeate", "pernicious", "perpetuate", "perplex", "perquisite", "perspicacious", "pertinacious", "pertinent", "perturb",
+    "pervasive", "pessimistic", "petulant", "philanthropic", "philistine", "phlegmatic", "phoenix", "picturesque", "piety", "pigment",
+    "pilgrimage", "pillage", "pillory", "pinnacle", "pious", "piquant", "placate", "placid", "plagiarism", "plaintive",
+    "platitude", "plausible", "plebeian", "plenipotentiary", "plentiful", "pliable", "poignant", "polarize", "polemic", "polyglot",
+    "pompous", "ponderous",  "portentous", "portly", "posthumous", "potent", "potable", "pragmatic", "preamble", "precarious",
+    "precedent", "precept", "precipitation", "preclude", "precocious", "predatory", "predilection", "predominant", "preeminent", "preemptive",
+    "preface", "preferential", "prejudice", "preliminary", "prelude", "premature", "premeditated", "premier", "premise", "premonition",
+    "preposterous", "prerogative", "prescient", "prescribe", "presumptuous", "pretentious", "prevail", "prevalent", "preventative", "pristine",
+    "proactive", "probation", "proclivity", "procrastinate", "prodigious", "profane", "profligate", "profound", "prognosis", "prohibit",
+    "projectile", "proliferate", "prolific", "prologue", "prolong", "prominent", "promiscuous", "promulgate", "prone", "propagate",
+    "propensity", "prophetic", "proponent", "proprietary", "prosaic", "proscribe", "prosecute", "protagonist", "protracted", "protocol",
+    "prototype", "protrude", "proverbial", "provincial", "provisional", "provoke", "prowess", "proximity", "prudent", "prune",
+    "pseudonym", "psychedelic",  "psychic", "puerile", "pugnacious", "pulchritude", "pulverize", "punctilious", "pungent", "punitive",
+    "purloin", "purport", "pursuit", "putrefy", "quagmire", "qualitative", "quandary", "quarantine", "quaternary", "querulous",
+    "quiescent", "quixotic", "quorum", "quotidian", "rabid", "raconteur",  "rambunctious", "rancorous", "rapacious", "rarefied",
+    "ratify", "raucous", "ravage", "ravenous",  "rebuff", "recalcitrant", "recant", "recapitulate", "recapitulation", "recast",
+    "recede", "recess", "recipient", "reciprocal",  "reclusive", "recollect", "reconcile", "recoup", "recrimination", "recourse",
+    "recreant", "rectify", "rectitude",  "recuperate", "recurrent", "redolent", "redundant", "refractory", "refute", "regale",
+    "regimen", "regress", "rehabilitate", "reiterate", "rejuvenate", "relapse", "relentless", "relic", "relinquish", "relish",
+    "relocate", "reluctant", "remediable", "reminiscent", "remiss", "remnant", "remonstrate", "renounce", "reparable", "repertoire",
+    "replenish", "reprehensible", "repress", "reprieve",  "reprimand", "reproach", "reprove", "repudiate", "repugnant", "requisition",
+    "requite", "rescind", "resolute", "resonance", "resonant", "respite", "respiration", "resplendent", "respond", "response",
+    "responsible", "restorative", "restrain", "restrict", "resurrection", "resuscitate", "reticent", "retribution", "retrieve", "retroactive",
+    "retrograde", "revelation", "reverberate", "reverie", "revere", "reversion", "revert", "revile", "revise", "revocation",
+    "rhetoric", "rhapsodic", "ribald", "rife", "rigorous", "riposte", "risible", "robust", "rococo", "rogue",
+    "rollicking", "rubric", "rueful", "rudimentary", "ruffian", "ruminate", "saccharine", "sacrilege", "sagacious", "salacious",
+    "salient", "salubrious", "salutary", "sanctimonious", "sanctuary", "sanguine", "sapient", "sardonic", "sartorial", "satiate",
+    "satirical", "saturnine", "saunter", "savant", "savor", "scavenger", "scintillating", "scrupulous", "scurrilous", "sedentary",
+    "sedulous", "seismic", "semblance", "senile", "sentient", "sentinel", "serendipity", "serene", "sermon", "serpentine",
+    "servile", "sever", "severance", "shrewd", "shun", "siblings", "simulacrum", "simultaneous", "sinecure", "sinister",
+    "skeptic", "skeptical", "skulk", "slander", "slapdash", "sleek", "slovenly", "slumber", "smug", "sobriquet",
+    "solemn", "solicit", "solitude", "somber", "somnolent", "sophisticated", "sophistry", "sordid", "specious", "spectacular",
+    "speculate", "spontaneous", "sporadic", "spurious", "squalid", "squander", "staunch", "stealthy", "stench", "sterile",
+    "stigma", "stint", "stipend",  "stipulate", "stoic", "strident", "stringent", "strive", "stroll", "stupefy",
+    "stymie", "subjugate", "sublime", "submissive", "subordinate", "subsequent", "subsidy", "substantiate", "subtle", "subversive",
+    "succinct", "succumb", "suffice", "suffocate", "sultry", "sumptuous", "supercilious", "superficial", "superfluous", "superlative",
+    "supine", "supplant", "supplicate", "surfeit", "surmise", "surmount", "surreptitious", "susceptible", "sustain", "sustenance",
+    "swindle", "sycophant", "syllabus", "symbiosis", "sympathetic", "synthesis", "synthetic", "tacit", "taciturn", "tactful",
+    "tangible", "tantalize", "tantamount", "tapestry", "tardiness", "tarnish", "tautology", "taut", "tedious", "temerity",
+    "temperance", "tempestuous", "temporal", "tenacious", "tenet", "tenuous", "terrestrial", "terse", "testament", "tether",
+    "theocracy", "thespian", "thorough", "thrifty", "thrive", "timorous", "titanic", "toady", "tolerant", "torpid",
+    "torrential", "tortuous", "tractable", "traduce", "tranquil", "transcend",  "transcribe", "transgress", "transient", "transition",
+    "translucent", "transmute", "transparent", "travail", "traverse", "treacherous", "treason", "treatise", "trepidation", "tribulation",
+    "tribute", "trifling", "trilogy", "trinket", "trivial", "truculent", "truncate", "tumultuous", "turbulent", "turpitude",
+    "tyrannical", "ubiquitous", "ulterior", "ultimate", "umbrage", "unanimous", "unassuming", "unavailing", "unbecoming", "uncertain",
+    "unchangeable", "unclear", "uncommunicative", "uncomprehending", "unconscionable", "unconstitutional", "uncooperative", "uncorroborated",
+    "uncouth", "undaunted", "undecided", "underestimate", "undermine", "undervalue", "underwhelm", "unearth", "unequivocal", "unfazed",
+    "unfettered", "unforeseen", "unfounded", "ungainly", "ungrateful", "unintelligible", "unjust", "unkempt", "unmitigated", "unparalleled",
+    "unpretentious", "unravel", "unscrupulous", "unseemly", "unsettling", "unsophisticated", "unspeakable", "unstable", "untenable", "untimely",
+    "untoward", "unwarranted", "unyielding", "uproarious", "urbane", "usurp", "vacillate", "vacuous", "vagabond", "vagrant",
+    "vainglorious", "valedictory", "valiant", "valid", "validate", "valor", "vanquish", "vapid", "variegated", "vaunt",
+    "vehement", "vehemence", "venal", "vendetta", "venerable", "venerate", "vengeful", "venturesome", "verbatim", "veracious",
+    "verbose", "verdant", "verisimilitude", "veritable", "vermiculite", "vernacular", "versatile", "vertex", "vertigo", "vicarious",
+    "vicissitude", "vigilant", "vigorous", "vile", "vilification", "vindicate", "vindictive", "violate", "viper", "virulent",
+    "virtuous", "visceral", "viscous", "vitiate", "vivacious", "vociferous", "vogue", "voluble", "voluminous", "voracious",
+    "vulnerable", "wanton", "warranty", "wary", "wastrel", "whimsical", "wily", "winsome", "wistful", "witty",
+    "wretched", "xenophobia", "yearning", "zealous", "zenith",  "Owl", "Penguin", "Dolphin", "Shark", 
 
 "Whale", "Octopus",  "Squid", "Seal", "Walrus", 
 
@@ -278,7 +382,7 @@
 
 "Comma", "Apostrophe", "Colon", "Semicolon", "Hyphen", 
 
-"Tense", "Passive", "Active", "Agreement", "Modifier",  "Honeydew", "Kiwi", "Lemon"
+"tense", "passive", "active", "agreement", "modifier",  "honeydew", "Kiwi", "Lemon"
       ];
       return words[Math.floor(Math.random() * words.length)];
     }
