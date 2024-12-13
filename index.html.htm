@@ -68,12 +68,6 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
-button {
-    position: relative;
-    width: 100%;
-    max-width: 200px;
-    margin: auto;
-}
 
     button:hover {
       background-color: #218838;
@@ -126,8 +120,6 @@ button {
     let timerInterval;
     let audioUrl = "";
 
-    
-
     // DOM Elements
     const scrambledWordElement = document.getElementById("scrambled-word");
     const userInput = document.getElementById("user-input");
@@ -178,24 +170,7 @@ button {
         playSoundBtn.style.display = "none";
       }
     }
-    
-document.addEventListener("DOMContentLoaded", () => {
-    const button = document.getElementById("myButton");
-    button.addEventListener("click", () => {
-        alert("Button clicked!");
-    });
-});
 
-    const button = document.getElementById("myButton");
-button.addEventListener("click", handleClick);
-button.addEventListener("touchstart", handleClick);
-
-function handleClick(event) {
-    event.preventDefault(); // Prevent duplicate events
-    alert("Button clicked or tapped!");
-}
-
-    
     // Start a new round
     function newRound() {
       clearInterval(timerInterval);
